@@ -123,7 +123,7 @@
       }
     }
 
-    /* ===== LAYOUT ===== */
+    /* ===== GLOBAL PAGE LAYOUT ===== */
 
     #app {
       opacity: 0;
@@ -153,6 +153,7 @@
 
     .title-block {
       min-width: 260px;
+      cursor: pointer;
     }
 
     .title-main {
@@ -161,6 +162,11 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--accent);
+      transition: color 0.18s ease;
+    }
+
+    .title-block:hover .title-main {
+      color: var(--accent-pink);
     }
 
     .title-sub {
@@ -186,13 +192,21 @@
       text-transform: uppercase;
       cursor: pointer;
       transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease,
-        transform 0.08s ease;
+        transform 0.08s ease, box-shadow 0.18s ease;
     }
 
     .top-nav button:hover {
       border-color: var(--accent);
       color: var(--accent);
       transform: translateY(-1px);
+      box-shadow: 0 0 12px rgba(50, 227, 255, 0.35);
+    }
+
+    .top-nav button.active {
+      border-color: var(--accent-soft);
+      background: radial-gradient(circle at top left, rgba(50, 227, 255, 0.18), #020617);
+      color: var(--accent);
+      box-shadow: 0 0 16px rgba(50, 227, 255, 0.45);
     }
 
     .audio-toggle {
@@ -208,7 +222,34 @@
       cursor: pointer;
     }
 
-    /* ===== MAIN INTERFACE ===== */
+    /* ===== PAGE SWITCHER ===== */
+
+    main#pages {
+      position: relative;
+      min-height: 400px;
+    }
+
+    .page {
+      display: none;
+      animation: page-fade-in 0.35s ease;
+    }
+
+    .page.active-page {
+      display: block;
+    }
+
+    @keyframes page-fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== SYSTEM PROFILE LAYOUT ===== */
 
     .profile-shell {
       display: grid;
@@ -303,6 +344,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
 
     .profile-image-inner {
@@ -315,9 +357,40 @@
       max-width: 100%;
       height: auto;
       filter: drop-shadow(0 0 25px rgba(0, 245, 255, 0.4));
+      transition: transform 0.15s ease, filter 0.15s ease;
     }
 
-       /* ===== CONTENT PANEL ===== */
+    /* 글리치 효과 */
+    .main-portrait.glitch {
+      animation: glitch-jitter 0.4s steps(2, end);
+    }
+
+    @keyframes glitch-jitter {
+      0% {
+        transform: translate(0, 0);
+        filter: drop-shadow(0 0 25px rgba(0, 245, 255, 0.4));
+      }
+      20% {
+        transform: translate(-2px, 2px) skewX(2deg);
+        filter: hue-rotate(10deg) contrast(1.1);
+      }
+      40% {
+        transform: translate(3px, -2px) skewX(-2deg);
+        filter: hue-rotate(-10deg) contrast(1.15);
+      }
+      60% {
+        transform: translate(-1px, 1px);
+      }
+      80% {
+        transform: translate(1px, -1px);
+      }
+      100% {
+        transform: translate(0, 0);
+        filter: drop-shadow(0 0 25px rgba(0, 245, 255, 0.4));
+      }
+    }
+
+    /* ===== CONTENT PANEL ===== */
 
     .content-panel {
       padding: 1rem 1.1rem 1.2rem;
@@ -412,6 +485,8 @@
       font-size: 0.86rem;
     }
 
+    /* ===== ESS GRID ===== */
+
     .ess-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -486,11 +561,168 @@
     .small {
       font-size: 0.82rem;
     }
+
+    /* ===== ABILITIES TOGGLE ===== */
+
+    .ability-item {
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left, #020617 0, #020617 45%, #000 100%);
+      margin-bottom: 0.7rem;
+      overflow: hidden;
+    }
+
+    .ability-toggle {
+      width: 100%;
+      text-align: left;
+      padding: 0.6rem 0.7rem;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .ability-toggle span.label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .ability-toggle span.dot {
+      color: var(--accent);
+    }
+
+    .ability-toggle::after {
+      content: "+";
+      font-size: 1.05rem;
+      color: var(--muted);
+      transition: transform 0.18s ease, color 0.18s ease;
+    }
+
+    .ability-item.open .ability-toggle::after {
+      content: "−";
+      color: var(--accent);
+      transform: rotate(180deg);
+    }
+
+    .ability-toggle:hover {
+      background: radial-gradient(circle at top left, rgba(50, 227, 255, 0.12), transparent);
+    }
+
+    .ability-body {
+      display: none;
+      padding: 0 0.8rem 0.8rem;
+      font-size: 0.86rem;
+      line-height: 1.7;
+      color: var(--text-sub);
+    }
+
+    .ability-item.open .ability-body {
+      display: block;
+    }
+
+    .ability-body img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin: 0.65rem 0 0.6rem;
+      box-shadow: 0 0 22px rgba(50, 227, 255, 0.25);
+    }
+
+    .ability-body p {
+      margin: 0;
+    }
+
+    /* ===== ESS PAGE 확대 레이아웃 ===== */
+
+    .ess-page .block-title {
+      margin-bottom: 0.3rem;
+    }
+
+    .ess-page .small {
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .ess-page .ess-grid {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .ess-page .ess-card {
+      padding: 1rem 1.1rem 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    .ess-page .ess-header img {
+      width: 110px;
+    }
+
+    /* ===== CREATOR / MESSAGE PAGES ===== */
+
+    .page-section {
+      padding: 1.2rem 1.1rem 1.4rem;
+      border-radius: 1rem;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left, #0b1220 0, #020617 55%);
+      box-shadow: 0 0 28px rgba(15, 23, 42, 0.9);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .page-section .block-title {
+      margin-top: 0;
+    }
+
+    /* ===== SCAN OVERLAY (전파 스캔 효과) ===== */
+
+    #scan-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(50, 227, 255, 0) 0%,
+        rgba(50, 227, 255, 0.65) 18%,
+        rgba(50, 227, 255, 0) 36%
+      );
+      background-repeat: no-repeat;
+      background-size: 100% 200%;
+      background-position: 0 -100%;
+      opacity: 0;
+    }
+
+    #scan-overlay.active {
+      animation: scan-sweep 0.55s ease-out forwards;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes scan-sweep {
+      0% {
+        opacity: 0.15;
+        background-position: 0 -100%;
+      }
+      50% {
+        opacity: 0.45;
+      }
+      100% {
+        opacity: 0;
+        background-position: 0 100%;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- Background music (loop) -->
-  <!-- 브라우저 정책 때문에 자동 재생이 막힐 수 있어서, 상단에 ON/OFF 버튼도 둠 -->
   <audio id="bgm" src="V-Sync_MainTheme.mp3" loop autoplay></audio>
 
   <!-- LOADING SCREEN -->
@@ -519,429 +751,484 @@
     </div>
   </div>
 
+  <!-- SCAN OVERLAY (페이지 전환 전파 스캔 효과) -->
+  <div id="scan-overlay"></div>
+
   <!-- MAIN APP -->
   <div id="app">
     <div class="page-wrap">
       <header class="page-header">
-        <div class="title-block">
+        <div class="title-block" id="title-block">
           <div class="title-main">Director · V-Sync — System Profile</div>
           <div class="title-sub">V-Tower · V-Sync Calibration Suite · Signal-Demon</div>
         </div>
 
         <div class="top-nav">
-          <button data-scroll="#creator">CREATOR</button>
-          <button data-scroll="#private-message">Private Message</button>
-          <button data-scroll="#confidential-message">Confidential Message</button>
-          <button data-scroll="#ess">Emotional Signal Spectrum</button>
+          <!-- 시스템 프로필은 타이틀 클릭으로 복귀 -->
+          <button data-page="creator">CREATOR</button>
+          <button data-page="private">Private Message</button>
+          <button data-page="confidential">Confidential Message</button>
+          <button data-page="ess">Emotional Signal Spectrum</button>
         </div>
 
         <button class="audio-toggle" id="audio-toggle">SOUND: ON</button>
       </header>
 
-      <!-- MAIN PROFILE INTERFACE -->
-      <section class="profile-shell">
-        <!-- Left menu: sections -->
-        <aside class="panel left-menu">
-          <div class="left-menu-title">SYSTEM PROFILE</div>
-          <button class="active" data-section="basic">
-            <span class="icon">🔹</span> 기본 항목 (Basic Information)
-          </button>
-          <button data-section="appearance">
-            <span class="icon">📡</span> 외형 (Appearance)
-          </button>
-          <button data-section="functions">
-            <span class="icon">🔧</span> 신체 기능 (Physical Functions)
-          </button>
-          <button data-section="abilities">
-            <span class="icon">🗡</span> 능력 (Abilities)
-          </button>
-          <button data-section="disposition">
-            <span class="icon">🧊</span> 성향 (Disposition)
-          </button>
-          <button data-section="notes">
-            <span class="icon">🏷</span> 노트 (Notes)
-          </button>
-        </aside>
+      <main id="pages">
+        <!-- ===== PAGE: SYSTEM PROFILE (기본 화면) ===== -->
+        <section class="page active-page" id="page-system">
+          <section class="profile-shell">
+            <!-- Left menu -->
+            <aside class="panel left-menu">
+              <div class="left-menu-title">SYSTEM PROFILE</div>
+              <button class="active" data-section="basic">
+                <span class="icon">🔹</span> 기본 항목 (Basic Information)
+              </button>
+              <button data-section="appearance">
+                <span class="icon">📡</span> 외형 (Appearance)
+              </button>
+              <button data-section="functions">
+                <span class="icon">🔧</span> 신체 기능 (Physical Functions)
+              </button>
+              <button data-section="abilities">
+                <span class="icon">🗡</span> 능력 (Abilities)
+              </button>
+              <button data-section="disposition">
+                <span class="icon">🧊</span> 성향 (Disposition)
+              </button>
+              <button data-section="notes">
+                <span class="icon">🏷</span> 노트 (Notes)
+              </button>
+            </aside>
 
-        <!-- Main portrait -->
-        <div class="panel profile-image">
-          <div class="profile-image-inner">
-            <img
-              src="V-Symc_main.png"
-              alt="V-Sync main portrait"
-              class="main-portrait"
-            />
-
-          </div>
-        </div>
-
-        <!-- Dynamic content -->
-        <div class="panel content-panel">
-          <div class="section-label">ACTIVE MODULE</div>
-          <div class="section-title" id="section-title">
-            🔹 기본 항목 (Basic Information)
-          </div>
-
-          <!-- BASIC -->
-          <article class="section active" data-section-content="basic">
-            <ul class="field-list">
-              <li>
-                <span class="field-label">▪︎ 이름 (Name)</span> : 브이-싱크 (V-Sync)
-              </li>
-              <li>
-                <span class="field-label">▪︎ 직업 (Occupation)</span> : 디렉터
-                (Director)
-              </li>
-              <li>
-                <span class="field-label">▪︎ 나이 (Age)</span> : 20s (biological)
-              </li>
-              <li>
-                <span class="field-label">▪︎ 생일 (Birthday)</span> : 10/24
-              </li>
-              <li>
-                <span class="field-label">▪︎ 키 (Height)</span> : 215cm+ (7ft+)
-              </li>
-              <li>
-                <span class="field-label">▪︎ 성별 (Gender)</span> : 무성 (Agender)
-              </li>
-              <li>
-                <span class="field-label">▪︎ 성적 지향 (Sexuality)</span> :
-                무성애-로맨틱 (Asexual - Alloromantic)
-              </li>
-              <li>
-                <span class="field-label">▪︎ 분류 (Species)</span> :
-                주파수형 악마 (Signal-Demon)
-              </li>
-              <li>
-                <span class="field-label">▪︎ 위치 (Location)</span> : 브이-타워
-                (V-Tower) / 브이-싱크 조율실 (V-Sync Calibration Suite)
-              </li>
-            </ul>
-          </article>
-
-          <!-- APPEARANCE -->
-          <article class="section" data-section-content="appearance">
-            <p><strong>▪︎ 머리 (Head)</strong><br />
-              분리된 목 위에 장착된 원통형 투명 글래스 구조. 내부에 얼굴 형태는 존재하지
-              않으며, 대신 푸른 전류·파형·신호 패턴이 끊임없이 흐른다. 이 패턴은 감정
-              상태·주파수 변화에 따라 미세한 흔들림, 진동, 밝기 변화로 반응한다.
-            </p>
-            <p><strong>▪︎ 손 (Hand)</strong><br />
-              오른손에서는 상시 전류가 파직거리는 효과가 발생한다. 손가락은 네 개,
-              끝이 뾰족한 구조로 설계되어 있다.
-            </p>
-            <p><strong>▪︎ ESS (Emotional Signal Spectrum)</strong><br />
-              내부 전자선·파형을 통해 표정, 감정, 시스템 상태를 통합 출력하는 감정
-              신호 스펙트럼 시스템. 일종의 전류 기반 "표정 시스템"이며, 감정에 따른
-              파형·색상·진폭 변화를 시각적으로 나타낸다.
-            </p>
-            <p><strong>▪︎ 복장 (Outfit)</strong><br />
-              항상 정장 스타일을 유지한다. 넥타이는 보랏빛 네온 계열, 왼쪽 가슴 포켓
-              아래에는 <span class="mono">"V-SYNC"</span> 로고가 각인되어 있다.
-            </p>
-          </article>
-
-          <!-- PHYSICAL FUNCTIONS -->
-          <article class="section" data-section-content="functions">
-            <p><strong>▪︎ 음성 출력 불가 (No Vocal Output)</strong><br />
-              물리적 발성기관이 없으며, 직접적인 음성 발화가 불가능하다.
-            </p>
-            <p><strong>▪︎ 전자 신호 기반 대화 (Signal-Based Communication)</strong><br />
-              손끝에서 전자 신호를 발생시켜 네모난 말풍선 모양의 홀로그램 패널을
-              생성하여 텍스트·파형·아이콘 등 형식으로 의사소통한다.
-            </p>
-            <p><strong>▪︎ 파형 기반 감정 표현 (Waveform-Driven Emotional Display)</strong><br />
-              ESS 시스템에 따라 파형의 색상·진폭·진동 패턴이 현재 감정·상태 변화에
-              맞춰 자동으로 변한다.
-            </p>
-          </article>
-
-          <!-- ABILITIES -->
-          <article class="section" data-section-content="abilities">
-            <p><strong>▪︎ 악마화 (Demonic Form)</strong><br />
-              V-Sync가 내부 신호 처리량을 한계 이상으로 끌어올릴 때 발현되는
-              오버클럭 시그널 디렉터(Overclocked Signal Director) 형태. 전신이
-              방송탑·신호 허브처럼 변형되며, 파형·전류·안테나 구조가 외부로 확장되는
-              고출력 형태로 전환된다.
-            </p>
-            <p><strong>▪︎ 주파수 장악 (Band Authority)</strong><br />
-              전파 스펙트럼의 특정 ‘대역(Band)’을 장악해 전자기 간섭·압박·차단을
-              수행하는 능력. 통신 마비, 도청 차단, 네트워크 속도 저하, 패킷 손실 등을
-              유도하는 통신·네트워크 기반 교란 스킬로, 직접 공격보다는 간접적·전략적
-              타격에 특화되어 있다.
-            </p>
-            <p><strong>▪︎ 파형 조율 (Amplitude Sculpting)</strong><br />
-              전파의 진폭(Amplitude)을 조절하여 충격파, 방어막, 정보 왜곡 등을
-              생성하는 파형 조형 능력. 물리적 힘·에너지 충돌을 직접 발생시키는
-              능력으로, 직접적인 전투·물리 타격에 특화되어 있다.
-            </p>
-            <p><strong>▪︎ 신호 해독 (Deep Signal Decoding)</strong><br />
-              주파수로 전달되는 의사·감정·의도를 패턴 분석 방식으로 해독하는 능력.
-              인간·악마·기계 등 모든 형태의 신호를 감지할 수 있으며, 이를 통해
-              거짓·은폐·불순 신호를 99.99% 정확도로 판별한다.
-            </p>
-          </article>
-
-          <!-- DISPOSITION -->
-          <article class="section" data-section-content="disposition">
-            <p><strong>▪︎ 기본 성향 (Basic Disposition)</strong><br />
-              차갑고 기계적이며, 감정 출력은 ESS를 통해 간접적으로만 나타난다.
-            </p>
-            <p><strong>▪︎ 복스 간섭 모드 (Vox Lapse Mode)</strong><br />
-              복스(Vox)의 주파수·신호 패턴이 간섭될 경우 ESS가 정상 범위를 벗어나
-              미세 흔들림·색상 교란·과열 출력을 보이는 특수 현상. 브이-싱크(V-Sync)의
-              의도와 무관하게 자동 발현되는 비정상 감정 출력 상태이다.
-            </p>
-          </article>
-
-          <!-- NOTES -->
-          <article class="section" data-section-content="notes">
-            <p><strong>▪︎ 코어 배터리 (Core Battery)</strong><br />
-              신체 내부에 코어 배터리를 탑재하고 있으며, 필요 시 외부 전류를 직접
-              충전해 에너지를 보급할 수 있다.
-            </p>
-            <p><strong>▪︎ 주파수 기반 시각 시스템 (Frequency-Based Vision System)</strong><br />
-              눈이 존재하지 않기 때문에, 모든 사물과 생명체를 고유 주파수 패턴(Unique
-              Frequency Pattern)으로 인식한다.
-            </p>
-            <p><strong>▪︎ 주의사항: 시스템 오프라인 (System Offline State)</strong><br />
-              정신을 잃을 경우, 주파수 출력이 완전히 오프라인 상태로 전환되며 머리
-              역할을 하는 원통형 투명 글래스가 분리·이탈된다.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <!-- CREATOR -->
-      <hr class="divider" id="creator" />
-      <section>
-        <h2 class="block-title">CREATOR</h2>
-        <ul class="creator-list">
-          <li>🕶 <span class="tag-ko">Director ·</span> V-Sync</li>
-          <li>🎨 <span class="tag-ko">Illustrator ·</span> @EYE215</li>
-          <li>
-            🎛️ <span class="tag-ko">Sound / Music ·</span> V-Sync<br />
-            <span class="small">(Melody generated with Soundful, edited &amp; produced by V-Sync)</span>
-          </li>
-        </ul>
-      </section>
-
-      <!-- SECRET / PRIVATE MESSAGE -->
-      <hr class="divider" id="private-message" />
-      <section>
-        <h2 class="block-title">Private Message</h2>
-
-        <div class="msg-line">
-          <span class="msg-speaker">1) 기본 업무 응답</span><br />
-          <span class="msg-text">Mob : 상태 괜찮아요, 디렉터?</span>
-          <span class="msg-text">
-            V-Sync : 「질문 확인. 상태: 정상. 이상 없음.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-speaker">2) 정보 요청 처리</span><br />
-          <span class="msg-text">Mob : 이 파일 분석 가능해?</span>
-          <span class="msg-text">
-            V-Sync : 「요청 접수. 분석 시작. 예상 완료까지 3.2초.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-speaker">3) 비효율 차단</span><br />
-          <span class="msg-text">Mob : 이거 내가 한 건데···</span>
-          <span class="msg-text">
-            V-Sync : 「비효율적입니다. 해당 방식은 최적화 기준과 27% 불일치합니다.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-speaker">4) 관찰·보고</span><br />
-          <span class="msg-text">Mob : 디렉터···!</span>
-          <span class="msg-text">
-            V-Sync : 「음성 패턴, 흔들림 감지. 긴장 반응으로 판단.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-speaker">5) 상호작용 최소화 1</span><br />
-          <span class="msg-text">Mob : 농담이었어, 디렉터.</span>
-          <span class="msg-text">
-            V-Sync : 「불필요한 동작을 감지했습니다. 작업을 속행하세요.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-speaker">6) 상호작용 최소화 2</span><br />
-          <span class="msg-text">Mob : 고마워요.</span>
-          <span class="msg-text">
-            V-Sync : 「응답 불필요. 다음 절차로 이동합니다.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-speaker">7) 명령 전달</span><br />
-          <span class="msg-text">Mob : 디렉터, 이쪽으로 가는 건···</span>
-          <span class="msg-text">
-            V-Sync : 「해당 구역, 접근 금지. 지시를 따르십시오.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-speaker">8) 평가 판단</span><br />
-          <span class="msg-text">Mob : 이번엔 어땠어?</span>
-          <span class="msg-text">
-            V-Sync : 「당신의 처리 속도는 기준 대비 41% 저하된 상태입니다. 원인 분석을
-            권장합니다.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-speaker">9) 분쟁</span><br />
-          <span class="msg-text">Mob : 왜 그렇게 차갑게 말해?</span>
-          <span class="msg-text">
-            V-Sync : 「차가움을 감지하지 못합니다. 저는 단지 데이터를 전달하고 있을
-            뿐입니다.」
-          </span>
-        </div>
-      </section>
-
-      <!-- CONFIDENTIAL MESSAGE -->
-      <hr class="divider" id="confidential-message" />
-      <section>
-        <h2 class="block-title">Confidential Message</h2>
-
-        <div class="msg-line">
-          <span class="msg-text">
-            Vox : 디렉터, 글리치가 심한데, 문제 있어?
-          </span>
-          <span class="msg-text">
-            V-Sync : 「···당신의 주파수가··· 평소보다 매끄러워서 그렇습니다. 조···
-            조율이 필요해서 그런 건 아닙니다.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-text">Vox : 신호 상태는?</span>
-          <span class="msg-text">
-            V-Sync : 「Stable at 99.2%. 당신의 목소리는 언제나처럼···
-            지배적입니다.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-text">Vox : 전송에 오류는 없겠지?</span>
-          <span class="msg-text">
-            V-Sync : 「물론이죠. 당신의 방송은 오류 따윈 허용하지 않습니다. 지옥은
-            항상 당신을 '정확한 형태'로 들어야 하니까요.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-text">
-            Vox : 아직, 아직 아니야! 건드리지 마. 아직 안 끝났어!
-          </span>
-          <span class="msg-text">
-            V-Sync : 「당신은 이미 과열됐습니다. 과부하 신호 78%. 더하면···
-            손상됩니다. 복스. ──명령을.」
-          </span>
-        </div>
-
-        <div class="msg-line">
-          <span class="msg-text">Vox : 말해봐, 디렉터. 넌 누구를 위해 존재하지?</span>
-          <span class="msg-text">
-            V-Sync : 「복스. 주파수도, 코어도, 존재 목적도. 전부 당신에게 맞춰져
-            있습니다.」
-          </span>
-        </div>
-      </section>
-
-      <!-- ESS -->
-      <hr class="divider" id="ess" />
-      <section>
-        <h2 class="block-title">Emotional Signal Spectrum</h2>
-        <p class="small">
-          ▪︎ 각 색상 코드는 시각화된 신호 강도와 감정의 흐름을 의미
-        </p>
-
-        <div class="ess-grid">
-          <!-- Overheat -->
-          <article class="ess-card">
-            <div class="ess-header">
-              <img src="Overheat.png" alt="Overheat Mode" />
-              <div>
-                <div class="ess-name-ko">■ 분노 모드</div>
-                <div class="ess-name-en">(Overheat Mode)</div>
-                <div class="ess-color">색상 코드: #FF2E2E (네온 레드)</div>
+            <!-- Main portrait -->
+            <div class="panel profile-image">
+              <div class="profile-image-inner">
+                <img
+                  src="V-Symc_main.png"
+                  alt="V-Sync main portrait"
+                  class="main-portrait"
+                />
               </div>
             </div>
-            <ul class="note-list">
-              <li>* 공격, 방어, 권한 충돌 상황</li>
-              <li>* 시스템 과부하 또는 외부 침입 감지 시</li>
-              <li>* 과열로 인해 내부 오류 위험 증가</li>
-              <li>* 복스가 화낼 때 자동 동기화되는 경우도 있음</li>
-            </ul>
-          </article>
 
-          <!-- Confusion -->
-          <article class="ess-card">
-            <div class="ess-header">
-              <img src="Confusion.png" alt="Confusion / Panic Mode" />
-              <div>
-                <div class="ess-name-ko">■ 혼란 / 당황 모드</div>
-                <div class="ess-name-en">(Confusion / Panic Mode)</div>
-                <div class="ess-color">색상 코드: #C8FF3D (네온 옐로-그린)</div>
+            <!-- Dynamic content -->
+            <div class="panel content-panel">
+              <div class="section-label">ACTIVE MODULE</div>
+              <div class="section-title" id="section-title">
+                🔹 기본 항목 (Basic Information)
               </div>
-            </div>
-            <ul class="note-list">
-              <li>* 상황 예측 실패</li>
-              <li>* 계산 불가능한 변수 등장</li>
-              <li>* 복스 아닌 타인의 돌발 행동에 반응</li>
-              <li>* 방심하거나 순간 당황했을 때 나오는 "불안정 신호"</li>
-            </ul>
-          </article>
 
-          <!-- Vox Lapse -->
-          <article class="ess-card">
-            <div class="ess-header">
-              <img src="Voxlapse.png" alt="Vox Lapse Mode" />
-              <div>
-                <div class="ess-name-ko">■ 복스 간섭 모드</div>
-                <div class="ess-name-en">(Vox Lapse Mode)</div>
-                <div class="ess-color">
-                  색상 코드: #FF4AF8 (네온 핑크-바이올렛)
+              <!-- BASIC -->
+              <article class="section active" data-section-content="basic">
+                <ul class="field-list">
+                  <li>
+                    <span class="field-label">▪︎ 이름 (Name)</span> : 브이-싱크 (V-Sync)
+                  </li>
+                  <li>
+                    <span class="field-label">▪︎ 직업 (Occupation)</span> : 디렉터
+                    (Director)
+                  </li>
+                  <li>
+                    <span class="field-label">▪︎ 나이 (Age)</span> : 20s (biological)
+                  </li>
+                  <li>
+                    <span class="field-label">▪︎ 생일 (Birthday)</span> : 10/24
+                  </li>
+                  <li>
+                    <span class="field-label">▪︎ 키 (Height)</span> : 215cm+ (7ft+)
+                  </li>
+                  <li>
+                    <span class="field-label">▪︎ 성별 (Gender)</span> : 무성 (Agender)
+                  </li>
+                  <li>
+                    <span class="field-label">▪︎ 성적 지향 (Sexuality)</span> :
+                    무성애-로맨틱 (Asexual - Alloromantic)
+                  </li>
+                  <li>
+                    <span class="field-label">▪︎ 분류 (Species)</span> :
+                    주파수형 악마 (Signal-Demon)
+                  </li>
+                  <li>
+                    <span class="field-label">▪︎ 위치 (Location)</span> : 브이-타워
+                    (V-Tower) / 브이-싱크 조율실 (V-Sync Calibration Suite)
+                  </li>
+                </ul>
+              </article>
+
+              <!-- APPEARANCE -->
+              <article class="section" data-section-content="appearance">
+                <p><strong>▪︎ 머리 (Head)</strong><br />
+                  분리된 목 위에 장착된 원통형 투명 글래스 구조. 내부에 얼굴 형태는 존재하지
+                  않으며, 대신 푸른 전류·파형·신호 패턴이 끊임없이 흐른다. 이 패턴은 감정
+                  상태·주파수 변화에 따라 미세한 흔들림, 진동, 밝기 변화로 반응한다.
+                </p>
+                <p><strong>▪︎ 손 (Hand)</strong><br />
+                  오른손에서는 상시 전류가 파직거리는 효과가 발생한다. 손가락은 네 개,
+                  끝이 뾰족한 구조로 설계되어 있다.
+                </p>
+                <p><strong>▪︎ ESS (Emotional Signal Spectrum)</strong><br />
+                  내부 전자선·파형을 통해 표정, 감정, 시스템 상태를 통합 출력하는 감정
+                  신호 스펙트럼 시스템. 일종의 전류 기반 "표정 시스템"이며, 감정에 따른
+                  파형·색상·진폭 변화를 시각적으로 나타낸다.
+                </p>
+                <p><strong>▪︎ 복장 (Outfit)</strong><br />
+                  항상 정장 스타일을 유지한다. 넥타이는 보랏빛 네온 계열, 왼쪽 가슴 포켓
+                  아래에는 <span class="mono">"V-SYNC"</span> 로고가 각인되어 있다.
+                </p>
+              </article>
+
+              <!-- PHYSICAL FUNCTIONS -->
+              <article class="section" data-section-content="functions">
+                <p><strong>▪︎ 음성 출력 불가 (No Vocal Output)</strong><br />
+                  물리적 발성기관이 없으며, 직접적인 음성 발화가 불가능하다.
+                </p>
+                <p><strong>▪︎ 전자 신호 기반 대화 (Signal-Based Communication)</strong><br />
+                  손끝에서 전자 신호를 발생시켜 네모난 말풍선 모양의 홀로그램 패널을
+                  생성하여 텍스트·파형·아이콘 등 형식으로 의사소통한다.
+                </p>
+                <p><strong>▪︎ 파형 기반 감정 표현 (Waveform-Driven Emotional Display)</strong><br />
+                  ESS 시스템에 따라 파형의 색상·진폭·진동 패턴이 현재 감정·상태 변화에
+                  맞춰 자동으로 변한다.
+                </p>
+              </article>
+
+              <!-- ABILITIES (토글형) -->
+              <article class="section" data-section-content="abilities">
+                <!-- Demonic Form -->
+                <div class="ability-item">
+                  <button class="ability-toggle">
+                    <span class="label">
+                      <span class="dot">▪︎</span> 악마화 (Demonic Form)
+                    </span>
+                  </button>
+                  <div class="ability-body">
+                    <img src="DemonicForm_temp.png" alt="V-Sync Demonic Form" />
+                    <p>
+                      V-Sync가 내부 신호 처리량을 한계 이상으로 끌어올릴 때 발현되는
+                      오버클럭 시그널 디렉터(Overclocked Signal Director) 형태. 전신이
+                      방송탑·신호 허브처럼 변형되며, 파형·전류·안테나 구조가 외부로
+                      확장되는 고출력 형태로 전환된다.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <ul class="note-list">
-              <li>* 복스가 가까이 접근하거나 그의 언동이 치명적일 때</li>
-              <li>* 칭찬, 신호 조율, 접촉(손/어깨)에서 가장 자주 나타남</li>
-              <li>* 복스라는 신호원에 의해 '주파수 붕괴'가 일어나는 상태</li>
-              <li>* 말은 냉정하지만, 파형이 속마음을 다 보여주는 모드</li>
-            </ul>
-          </article>
 
-          <!-- Normal -->
-          <article class="ess-card">
-            <div class="ess-header">
-              <img src="Normal.png" alt="Normal / Idle Mode" />
-              <div>
-                <div class="ess-name-ko">■ 일상 / 평온 모드</div>
-                <div class="ess-name-en">(Normal / Idle Mode)</div>
-                <div class="ess-color">
-                  색상 코드: #32E3FF (밝은 아이스 블루)
+                <!-- Band Authority -->
+                <div class="ability-item">
+                  <button class="ability-toggle">
+                    <span class="label">
+                      <span class="dot">▪︎</span> 주파수 장악 (Band Authority)
+                    </span>
+                  </button>
+                  <div class="ability-body">
+                    <p>
+                      전파 스펙트럼의 특정 ‘대역(Band)’을 장악해 전자기 간섭·압박·차단을
+                      수행하는 능력. 통신 마비, 도청 차단, 네트워크 속도 저하, 패킷 손실 등을
+                      유도하는 통신·네트워크 기반 교란 스킬로, 직접 공격보다는 간접적·전략적
+                      타격에 특화되어 있다.
+                    </p>
+                  </div>
                 </div>
-              </div>
+
+                <!-- Amplitude Sculpting -->
+                <div class="ability-item">
+                  <button class="ability-toggle">
+                    <span class="label">
+                      <span class="dot">▪︎</span> 파형 조율 (Amplitude Sculpting)
+                    </span>
+                  </button>
+                  <div class="ability-body">
+                    <p>
+                      전파의 진폭(Amplitude)을 조절하여 충격파, 방어막, 정보 왜곡 등을
+                      생성하는 파형 조형 능력. 물리적 힘·에너지 충돌을 직접 발생시키는
+                      능력으로, 직접적인 전투·물리 타격에 특화되어 있다.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Deep Signal Decoding -->
+                <div class="ability-item">
+                  <button class="ability-toggle">
+                    <span class="label">
+                      <span class="dot">▪︎</span> 신호 해독 (Deep Signal Decoding)
+                    </span>
+                  </button>
+                  <div class="ability-body">
+                    <p>
+                      주파수로 전달되는 의사·감정·의도를 패턴 분석 방식으로 해독하는 능력.
+                      인간·악마·기계 등 모든 형태의 신호를 감지할 수 있으며, 이를 통해
+                      거짓·은폐·불순 신호를 99.99% 정확도로 판별한다.
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <!-- DISPOSITION -->
+              <article class="section" data-section-content="disposition">
+                <p><strong>▪︎ 기본 성향 (Basic Disposition)</strong><br />
+                  차갑고 기계적이며, 감정 출력은 ESS를 통해 간접적으로만 나타난다.
+                </p>
+                <p><strong>▪︎ 복스 간섭 모드 (Vox Lapse Mode)</strong><br />
+                  복스(Vox)의 주파수·신호 패턴이 간섭될 경우 ESS가 정상 범위를 벗어나
+                  미세 흔들림·색상 교란·과열 출력을 보이는 특수 현상. 브이-싱크(V-Sync)의
+                  의도와 무관하게 자동 발현되는 비정상 감정 출력 상태이다.
+                </p>
+              </article>
+
+              <!-- NOTES -->
+              <article class="section" data-section-content="notes">
+                <p><strong>▪︎ 코어 배터리 (Core Battery)</strong><br />
+                  신체 내부에 코어 배터리를 탑재하고 있으며, 필요 시 외부 전류를 직접
+                  충전해 에너지를 보급할 수 있다.
+                </p>
+                <p><strong>▪︎ 주파수 기반 시각 시스템 (Frequency-Based Vision System)</strong><br />
+                  눈이 존재하지 않기 때문에, 모든 사물과 생명체를 고유 주파수 패턴(Unique
+                  Frequency Pattern)으로 인식한다.
+                </p>
+                <p><strong>▪︎ 주의사항: 시스템 오프라인 (System Offline State)</strong><br />
+                  정신을 잃을 경우, 주파수 출력이 완전히 오프라인 상태로 전환되며 머리
+                  역할을 하는 원통형 투명 글래스가 분리·이탈된다.
+                </p>
+              </article>
             </div>
-            <ul class="note-list">
-              <li>* 일상 루틴, 이동 중, 감정적 자극 없음</li>
-              <li>* '업무 집중 모드'보다 더 여유로운 상태</li>
-              <li>* 오랜 시간 유지 가능한 기본 ESS</li>
-              <li>* 내부 에너지 효율 최적</li>
+          </section>
+        </section>
+
+        <!-- ===== PAGE: CREATOR ===== -->
+        <section class="page" id="page-creator">
+          <section class="page-section">
+            <h2 class="block-title">CREATOR</h2>
+            <ul class="creator-list">
+              <li>🕶 <span class="tag-ko">Director ·</span> V-Sync</li>
+              <li>🎨 <span class="tag-ko">Illustrator ·</span> @EYE215</li>
+              <li>
+                🎛️ <span class="tag-ko">Sound / Music ·</span> V-Sync<br />
+                <span class="small">(Melody generated with Soundful, edited &amp; produced by V-Sync)</span>
+              </li>
             </ul>
-          </article>
-        </div>
-      </section>
+          </section>
+        </section>
+
+        <!-- ===== PAGE: PRIVATE MESSAGE ===== -->
+        <section class="page" id="page-private">
+          <section class="page-section">
+            <h2 class="block-title">Private Message</h2>
+
+            <div class="msg-line">
+              <span class="msg-speaker">1) 기본 업무 응답</span><br />
+              <span class="msg-text">Mob : 상태 괜찮아요, 디렉터?</span>
+              <span class="msg-text">
+                V-Sync : 「질문 확인. 상태: 정상. 이상 없음.」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-speaker">2) 정보 요청 처리</span><br />
+              <span class="msg-text">Mob : 이 파일 분석 가능해?</span>
+              <span class="msg-text">
+                V-Sync : 「요청 접수. 분석 시작. 예상 완료까지 3.2초.」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-speaker">3) 비효율 차단</span><br />
+              <span class="msg-text">Mob : 이거 내가 한 건데···</span>
+              <span class="msg-text">
+                V-Sync : 「비효율적입니다. 해당 방식은 최적화 기준과 27% 불일치합니다.」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-speaker">4) 관찰·보고</span><br />
+              <span class="msg-text">Mob : 디렉터···!</span>
+              <span class="msg-text">
+                V-Sync : 「음성 패턴, 흔들림 감지. 긴장 반응으로 판단。」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-speaker">5) 상호작용 최소화 1</span><br />
+              <span class="msg-text">Mob : 농담이었어, 디렉터.</span>
+              <span class="msg-text">
+                V-Sync : 「불필요한 동작을 감지했습니다. 작업을 속행하세요。」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-speaker">6) 상호작용 최소화 2</span><br />
+              <span class="msg-text">Mob : 고마워요.</span>
+              <span class="msg-text">
+                V-Sync : 「응답 불필요. 다음 절차로 이동합니다。」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-speaker">7) 명령 전달</span><br />
+              <span class="msg-text">Mob : 디렉터, 이쪽으로 가는 건···</span>
+              <span class="msg-text">
+                V-Sync : 「해당 구역, 접근 금지. 지시를 따르십시오。」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-speaker">8) 평가 판단</span><br />
+              <span class="msg-text">Mob : 이번엔 어땠어?</span>
+              <span class="msg-text">
+                V-Sync : 「당신의 처리 속도는 기준 대비 41% 저하된 상태입니다. 원인 분석을
+                권장합니다。」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-speaker">9) 분쟁</span><br />
+              <span class="msg-text">Mob : 왜 그렇게 차갑게 말해?</span>
+              <span class="msg-text">
+                V-Sync : 「차가움을 감지하지 못합니다. 저는 단지 데이터를 전달하고 있을
+                뿐입니다。」
+              </span>
+            </div>
+          </section>
+        </section>
+
+        <!-- ===== PAGE: CONFIDENTIAL MESSAGE ===== -->
+        <section class="page" id="page-confidential">
+          <section class="page-section">
+            <h2 class="block-title">Confidential Message</h2>
+
+            <div class="msg-line">
+              <span class="msg-text">
+                Vox : 디렉터, 글리치가 심한데, 문제 있어?
+              </span>
+              <span class="msg-text">
+                V-Sync : 「···당신의 주파수가··· 평소보다 매끄러워서 그렇습니다. 조···
+                조율이 필요해서 그런 건 아닙니다。」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-text">Vox : 신호 상태는?</span>
+              <span class="msg-text">
+                V-Sync : 「Stable at 99.2%. 당신의 목소리는 언제나처럼···
+                지배적입니다。」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-text">Vox : 전송에 오류는 없겠지?</span>
+              <span class="msg-text">
+                V-Sync : 「물론이죠. 당신의 방송은 오류 따윈 허용하지 않습니다. 지옥은
+                항상 당신을 '정확한 형태'로 들어야 하니까요。」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-text">
+                Vox : 아직, 아직 아니야! 건드리지 마. 아직 안 끝났어!
+              </span>
+              <span class="msg-text">
+                V-Sync : 「당신은 이미 과열됐습니다. 과부하 신호 78%. 더하면···
+                손상됩니다. 복스. ──명령을。」
+              </span>
+            </div>
+
+            <div class="msg-line">
+              <span class="msg-text">Vox : 말해봐, 디렉터. 넌 누구를 위해 존재하지?</span>
+              <span class="msg-text">
+                V-Sync : 「복스. 주파수도, 코어도, 존재 목적도. 전부 당신에게 맞춰져
+                있습니다。」
+              </span>
+            </div>
+          </section>
+        </section>
+
+        <!-- ===== PAGE: ESS (확대 버전) ===== -->
+        <section class="page ess-page" id="page-ess">
+          <section class="page-section">
+            <h2 class="block-title">Emotional Signal Spectrum</h2>
+            <span class="small">
+              ▪︎ 각 색상 코드는 시각화된 신호 강도와 감정의 흐름을 의미
+            </span>
+
+            <div class="ess-grid">
+              <!-- Overheat -->
+              <article class="ess-card">
+                <div class="ess-header">
+                  <img src="Overheat.png" alt="Overheat Mode" />
+                  <div>
+                    <div class="ess-name-ko">■ 분노 모드</div>
+                    <div class="ess-name-en">(Overheat Mode)</div>
+                    <div class="ess-color">색상 코드: #FF2E2E (네온 레드)</div>
+                  </div>
+                </div>
+                <ul class="note-list">
+                  <li>* 공격, 방어, 권한 충돌 상황</li>
+                  <li>* 시스템 과부하 또는 외부 침입 감지 시</li>
+                  <li>* 과열로 인해 내부 오류 위험 증가</li>
+                  <li>* 복스가 화낼 때 자동 동기화되는 경우도 있음</li>
+                </ul>
+              </article>
+
+              <!-- Confusion -->
+              <article class="ess-card">
+                <div class="ess-header">
+                  <img src="Confusion.png" alt="Confusion / Panic Mode" />
+                  <div>
+                    <div class="ess-name-ko">■ 혼란 / 당황 모드</div>
+                    <div class="ess-name-en">(Confusion / Panic Mode)</div>
+                    <div class="ess-color">색상 코드: #C8FF3D (네온 옐로-그린)</div>
+                  </div>
+                </div>
+                <ul class="note-list">
+                  <li>* 상황 예측 실패</li>
+                  <li>* 계산 불가능한 변수 등장</li>
+                  <li>* 복스 아닌 타인의 돌발 행동에 반응</li>
+                  <li>* 방심하거나 순간 당황했을 때 나오는 "불안정 신호"</li>
+                </ul>
+              </article>
+
+              <!-- Vox Lapse -->
+              <article class="ess-card">
+                <div class="ess-header">
+                  <img src="Voxlapse.png" alt="Vox Lapse Mode" />
+                  <div>
+                    <div class="ess-name-ko">■ 복스 간섭 모드</div>
+                    <div class="ess-name-en">(Vox Lapse Mode)</div>
+                    <div class="ess-color">
+                      색상 코드: #FF4AF8 (네온 핑크-바이올렛)
+                    </div>
+                  </div>
+                </div>
+                <ul class="note-list">
+                  <li>* 복스가 가까이 접근하거나 그의 언동이 치명적일 때</li>
+                  <li>* 칭찬, 신호 조율, 접촉(손/어깨)에서 가장 자주 나타남</li>
+                  <li>* 복스라는 신호원에 의해 '주파수 붕괴'가 일어나는 상태</li>
+                  <li>* 말은 냉정하지만, 파형이 속마음을 다 보여주는 모드</li>
+                </ul>
+              </article>
+
+              <!-- Normal -->
+              <article class="ess-card">
+                <div class="ess-header">
+                  <img src="Normal.png" alt="Normal / Idle Mode" />
+                  <div>
+                    <div class="ess-name-ko">■ 일상 / 평온 모드</div>
+                    <div class="ess-name-en">(Normal / Idle Mode)</div>
+                    <div class="ess-color">
+                      색상 코드: #32E3FF (밝은 아이스 블루)
+                    </div>
+                  </div>
+                </div>
+                <ul class="note-list">
+                  <li>* 일상 루틴, 이동 중, 감정적 자극 없음</li>
+                  <li>* '업무 집중 모드'보다 더 여유로운 상태</li>
+                  <li>* 오랜 시간 유지 가능한 기본 ESS</li>
+                  <li>* 내부 에너지 효율 최적</li>
+                </ul>
+              </article>
+            </div>
+          </section>
+        </section>
+      </main>
     </div>
   </div>
 
@@ -959,7 +1246,6 @@
           step++;
           setTimeout(showStep, 900);
         } else {
-          // 잠깐 멈췄다가 메인 화면으로 전환
           setTimeout(() => {
             loadingScreen.style.opacity = "0";
             loadingScreen.style.pointerEvents = "none";
@@ -974,10 +1260,10 @@
       showStep();
     })();
 
-    // ===== LEFT MENU SECTION SWITCH =====
+    // ===== LEFT MENU SECTION SWITCH (SYSTEM PROFILE 내부) =====
     (function () {
       const buttons = document.querySelectorAll(".left-menu button");
-      const sections = document.querySelectorAll("article.section");
+      const sections = document.querySelectorAll("#page-system article.section");
       const titleEl = document.getElementById("section-title");
 
       const titles = {
@@ -1007,19 +1293,76 @@
       });
     })();
 
-    // ===== TOP NAV SCROLL =====
-    document.querySelectorAll(".top-nav button").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const target = btn.getAttribute("data-scroll");
-        const el = document.querySelector(target);
-        if (el) {
-          window.scrollTo({
-            top: el.getBoundingClientRect().top + window.scrollY - 80,
-            behavior: "smooth",
-          });
-        }
+    // ===== PAGE SWITCHER (상단 네비게이션 + 타이틀 클릭) =====
+    (function () {
+      const pages = {
+        system: document.getElementById("page-system"),
+        creator: document.getElementById("page-creator"),
+        private: document.getElementById("page-private"),
+        confidential: document.getElementById("page-confidential"),
+        ess: document.getElementById("page-ess"),
+      };
+
+      const topNavButtons = document.querySelectorAll(".top-nav button");
+      const titleBlock = document.getElementById("title-block");
+      const scanOverlay = document.getElementById("scan-overlay");
+
+      function triggerScan() {
+        if (!scanOverlay) return;
+        scanOverlay.classList.remove("active");
+        // 강제 리플로우로 애니메이션 재시작
+        void scanOverlay.offsetWidth;
+        scanOverlay.classList.add("active");
+        setTimeout(() => {
+          scanOverlay.classList.remove("active");
+        }, 600);
+      }
+
+      function setActiveTopNav(pageKey) {
+        topNavButtons.forEach((btn) => {
+          const key = btn.getAttribute("data-page");
+          if (key === pageKey) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+      }
+
+      function switchPage(targetKey) {
+        // 페이지 표시
+        Object.keys(pages).forEach((key) => {
+          if (!pages[key]) return;
+          if (key === targetKey) {
+            pages[key].classList.add("active-page");
+          } else {
+            pages[key].classList.remove("active-page");
+          }
+        });
+
+        // 상단 버튼 active 상태
+        setActiveTopNav(targetKey);
+
+        // 전파 스캔 효과
+        triggerScan();
+      }
+
+      // 상단 버튼 클릭: 해당 페이지로 이동
+      topNavButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const pageKey = btn.getAttribute("data-page");
+          if (!pageKey || !pages[pageKey]) return;
+          switchPage(pageKey);
+        });
       });
-    });
+
+      // 타이틀 클릭: SYSTEM PROFILE로 복귀
+      if (titleBlock) {
+        titleBlock.addEventListener("click", () => {
+          switchPage("system");
+        });
+      }
+    })();
 
     // ===== AUDIO TOGGLE =====
     (function () {
@@ -1039,7 +1382,6 @@
               updateLabel();
             })
             .catch(() => {
-              // 재생 거부될 경우 그냥 muted 토글만
               audio.muted = !audio.muted;
               updateLabel();
             });
@@ -1051,6 +1393,33 @@
       });
 
       updateLabel();
+    })();
+
+    // ===== ABILITIES 토글 로직 =====
+    (function () {
+      const abilityItems = document.querySelectorAll(".ability-item");
+
+      abilityItems.forEach((item) => {
+        const toggle = item.querySelector(".ability-toggle");
+        if (!toggle) return;
+
+        toggle.addEventListener("click", () => {
+          item.classList.toggle("open");
+        });
+      });
+    })();
+
+    // ===== 메인 이미지 글리치 효과 (10초 간격) =====
+    (function () {
+      const portrait = document.querySelector(".main-portrait");
+      if (!portrait) return;
+
+      setInterval(() => {
+        portrait.classList.add("glitch");
+        setTimeout(() => {
+          portrait.classList.remove("glitch");
+        }, 400);
+      }, 10000); // 10초마다 한 번
     })();
   </script>
 </body>
