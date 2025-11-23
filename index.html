@@ -43,7 +43,7 @@
       text-decoration: underline;
     }
 
-    /* ===== LOADING SCREEN ===== */
+    /* 로딩 화면 */
 
     #loading-screen {
       position: fixed;
@@ -123,7 +123,7 @@
       }
     }
 
-    /* ===== GLOBAL PAGE LAYOUT ===== */
+    /* 전체 페이지 레이아웃 */
 
     #app {
       opacity: 0;
@@ -222,7 +222,7 @@
       cursor: pointer;
     }
 
-    /* ===== PAGE SWITCHER ===== */
+    /* 페이지 전환 */
 
     main#pages {
       position: relative;
@@ -249,7 +249,7 @@
       }
     }
 
-    /* ===== SYSTEM PROFILE LAYOUT ===== */
+    /* 시스템 프로필 레이아웃 */
 
     .profile-shell {
       display: grid;
@@ -360,7 +360,7 @@
       transition: transform 0.15s ease, filter 0.15s ease;
     }
 
-/* ===== 정적 TV 노이즈 글리치 오버레이 (이미지 없이 CSS로 생성) ===== */
+/* 메인 사진 10초 노이즈1 */
 .profile-image-inner::after {
   content: "";
   position: absolute;
@@ -370,7 +370,7 @@
   mix-blend-mode: screen;
   transition: opacity 0.06s ease-out;
 
-  /* 블루 톤 가벼운 노이즈 + 글리치 스캔라인 느낌 */
+  /* 메인 사진 10초 노이즈2 */
   background-image:
     /* 세로 잡음 */
     repeating-linear-gradient(
@@ -380,7 +380,7 @@
       rgba(15, 23, 42, 0.5) 2px,
       rgba(15, 23, 42, 0.5) 4px
     ),
-    /* 가로 스캔라인 */
+    /* 메인 사진 10초 노이즈3 */
     repeating-linear-gradient(
       0deg,
       rgba(148, 163, 184, 0.15) 0px,
@@ -393,15 +393,15 @@
 }
 
 .profile-image-inner.noise-active::after {
-  opacity: 0.35; /* 기본 불투명도 0.35 */
+  opacity: 0.35; 
 }
 
 
     .profile-image-inner.noise-active::after {
-      opacity: 0.35; /* 요청한 기본 불투명도 */
+      opacity: 0.35;
     }
 
-    /* ===== CONTENT PANEL ===== */
+    /* 콘텐츠 영역 */
 
     .content-panel {
       padding: 1rem 1.1rem 1.2rem;
@@ -496,7 +496,7 @@
       font-size: 0.86rem;
     }
 
-    /* ===== ESS GRID (기본) ===== */
+    /* ESS */
 
     .ess-grid {
       display: grid;
@@ -573,7 +573,7 @@
       font-size: 0.82rem;
     }
 
-    /* ===== ABILITIES TOGGLE ===== */
+    /* 능력 (Abilities) */
 
     .ability-item {
       border-radius: 0.75rem;
@@ -652,7 +652,7 @@
       margin: 0;
     }
 
-    /* ===== ESS PAGE 확대 레이아웃 ===== */
+    /* ESS 확대1 */
 
     .ess-page .block-title {
       margin-bottom: 0.3rem;
@@ -663,7 +663,7 @@
       display: block;
     }
 
-    /* 여기서 확대 ESS는 2 x 2 고정 (넓은 화면 기준) */
+    /* ESS 확대2 */
     .ess-page .ess-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -686,7 +686,7 @@
       }
     }
 
-    /* ===== CREATOR / MESSAGE PAGES ===== */
+    /* 상단 버튼 */
 
     .page-section {
       padding: 1.2rem 1.1rem 1.4rem;
@@ -702,7 +702,7 @@
       margin-top: 0;
     }
 
-    /* ===== SCAN OVERLAY (전파 스캔 효과) ===== */
+    /* 전파 스캔 효과 */
 
     #scan-overlay {
       position: fixed;
